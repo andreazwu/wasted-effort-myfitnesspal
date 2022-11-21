@@ -7,6 +7,39 @@ const { data: nutrientInfo } = await axios.post(apiEndpoint, params, {
 });
 updateFocusedFood(nutrientInfo);
 
+// in the reducer (thunk):
+export const thunkGetNutrition = (queryString) => async (dispatch) => {
+  const response = await fetch(`https://trackapi.nutritionix.com/v2/natural/nutrients`, {
+    method: 'POST',
+    headers: {
+    'Content-Type': 'application/json',
+    'x-app-id': '2b96017a',
+    'x-app-key': '417ee5d2dcb531c6e5d81cb43fb2d06c',
+    },
+    body: JSON.stringify({
+     "query" : queryString
+    })
+  })
+  if (response.ok) {
+    const res = await response.json()
+    const foodData = {
+      "food_name" : res.foods[0].food_name,
+      "serving_qty": res.foods[0].serving_qty,
+      "serving_unit": res.foods[0].serving_unit,
+      "calories": res.foods[0].nf_calories,
+      "carbs": res.foods[0].nf_total_carbohydrate,
+      "protein": res.foods[0].nf_protein,
+      "fat": res.foods[0].nf_total_fat,
+      "saturated_fat": res.foods[0].nf_saturated_fat,
+      "fiber": res.foods[0].nf_dietary_fiber,
+      "sodium": res.foods[0].nf_sodium,
+      "potassium": res.foods[0].nf_potassium
+    }
+    dispatch(ACGetNutrition(foodData))
+    return foodData
+  }
+}
+
 // fetch example (POST, with body of "query"):
 fetch(`https://trackapi.nutritionix.com/v2/natural/nutrients`, {
     method: 'POST',
