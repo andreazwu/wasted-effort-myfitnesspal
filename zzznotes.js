@@ -23,6 +23,8 @@ export const thunkGetNutrition = (queryString) => async (dispatch) => {
   if (response.ok) {
     const res = await response.json()
     const foodData = {
+      "food_image": res.food[0].photo.highres,
+      "food_tag_id": res.foods[0].tags.tag_id,
       "food_name" : res.foods[0].food_name,
       "serving_qty": res.foods[0].serving_qty,
       "serving_unit": res.foods[0].serving_unit,
@@ -32,8 +34,11 @@ export const thunkGetNutrition = (queryString) => async (dispatch) => {
       "fat": res.foods[0].nf_total_fat,
       "saturated_fat": res.foods[0].nf_saturated_fat,
       "fiber": res.foods[0].nf_dietary_fiber,
+      "cholesterol": res.foods[0].nf_cholesterol,
+      "sugars": res.foods[0].nf_sugars,
       "sodium": res.foods[0].nf_sodium,
-      "potassium": res.foods[0].nf_potassium
+      "potassium": res.foods[0].nf_potassium,
+      "full_nutrients": res.food[0].full_nutrients
     }
     dispatch(ACGetNutrition(foodData))
     return foodData
@@ -52,11 +57,11 @@ fetch(`https://trackapi.nutritionix.com/v2/natural/nutrients`, {
      "query" : "1 cup chicken noodle soup"
     })
 }).then(res => res.json())
-.then(res => console.log (res.foods[0].food_name, res.foods[0].serving_qty, res.foods[0].serving_unit, "calories:", res.foods[0].nf_calories, "carbs:", res.foods[0].nf_total_carbohydrate, "protein:", res.foods[0].nf_protein, "fat:", res.foods[0].nf_total_fat, "saturated fat:", res.foods[0].nf_saturated_fat, "fiber:", res.foods[0].nf_dietary_fiber, "sodium:", res.foods[0].nf_sodium,"mg", "potassium:", res.foods[0].nf_potassium, "mg"))
+.then(res => console.log ("food tag id:", res.foods[0].tags.tag_id, res.foods[0].food_name, res.foods[0].serving_qty, res.foods[0].serving_unit, "calories:", res.foods[0].nf_calories, "carbs:", res.foods[0].nf_total_carbohydrate, "protein:", res.foods[0].nf_protein, "fat:", res.foods[0].nf_total_fat, "saturated fat:", res.foods[0].nf_saturated_fat, "fiber:", res.foods[0].nf_dietary_fiber, "sodium:", res.foods[0].nf_sodium,"mg", "potassium:", res.foods[0].nf_potassium, "mg"))
 // .then(console.log)
 
 // response:
-// chicken noodle soup 1 cup calories: 59.52 carbs: 7.37 protein: 2.88 fat: 1.88 saturated fat: 0.47 fiber: 1.24 sodium: 830.8 mg potassium: 59.52 mg
+// food tag id: 256 chicken noodle soup 1 cup calories: 59.52 carbs: 7.37 protein: 2.88 fat: 1.88 saturated fat: 0.47 fiber: 1.24 sodium: 830.8 mg potassium: 59.52 mg
 const nutritionalresult =
 {
   "foods": [
